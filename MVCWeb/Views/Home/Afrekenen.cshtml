@@ -1,0 +1,44 @@
+﻿@model List<Film>
+
+
+    <h2>afrekenen</h2>
+@{
+    var klant = TempData["Client"] as Klant;
+    if (Model != null && Model.Any())
+    {
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td><strong>Titel</strong></td>
+            <td><strong>Prijs</strong></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var film in Model)
+        {
+            <tr>
+                <td>
+                    @film.Titel
+                </td>
+                <td>
+                    @film.Prijs
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+                <tr>
+                    <td><strong>prijs</strong></td>
+                    <td><strong>@Model.Sum(p => p.Prijs)</strong></td>
+                </tr>
+    </tfoot>
+</table>
+    }
+
+    <h3>Wordt gefactureerd aan:</h3>
+    <h5>@klant.Naam</h5>
+    <h5>@klant.Straat_Nr</h5>
+    <h5>@klant.Gemeente</h5>
+    <a class="btn btn-success" asp-action="AfrekenenDoorvoeren">Afrekenen doorvoeren</a>
+
+}

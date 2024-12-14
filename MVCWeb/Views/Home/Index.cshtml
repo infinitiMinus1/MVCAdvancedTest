@@ -1,0 +1,32 @@
+﻿@model KlantViewModel
+
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@{if (ViewBag.isAlIngelogd != true)
+{
+<div class="text-center">
+
+<form asp-action="Aanmelden" method="post">
+    <label asp-for="VoorNaam"></label>
+    <input asp-for="VoorNaam" /><br /><br />
+    <label asp-for="Postcode"></label>
+    <input asp-for="Postcode" />
+    <br /><br>
+    <input type="submit" value="Aanmelden" class="btn btn-primary btn-lg" />
+</form>
+<p>@TempData["Message"]</p>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-primary text-center" role="alert">
+            Je bent al ingelogd
+        </div><br />
+        <div class ="text-center"><a asp-action="Genres" class="btn btn-primary">Kies Genre</a></div>
+        
+    }
+
+}

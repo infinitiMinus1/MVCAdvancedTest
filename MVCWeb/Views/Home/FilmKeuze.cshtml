@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Film>
+
+
+<div class="alert alert-primary text-center" role="alert">
+    @TempData["Message"]
+</div>
+<h2>@ViewBag.genre</h2>
+<br />
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td><strong>Titel</strong></td>
+            <td><strong>Prijs</strong></td>
+            <td><strong>In voorraad</strong></td>
+            <td><strong>Huren</strong></td>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var film in Model)
+        {
+            <tr>
+                <td>
+                   @film.Titel
+                </td>
+                <td>
+                    @film.Prijs €
+                </td>
+                <td>
+                    @film.InVoorraad
+                </td>
+                <td>@{
+                        if (film.InVoorraad > 0) {
+                            <a asp-action="WinkelmandToevoegen"
+                            asp-route-id="@film.FilmId">
+                        <img src="~/Images/plus.png" alt="plus" height="30" />
+                    </a>}}
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="text-center"><a asp-action="Genres" class="btn btn-primary">Terug naar genre-overzicht</a></div>

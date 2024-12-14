@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Genre>
+
+    @if(Model != null)
+    {
+    <div class="alert alert-primary text-center" role="alert">
+        Klik op het gewenste Genre
+    </div>
+
+    <div class="text-center">
+        @foreach (var genre in Model)
+        {
+        <a asp-action="FilmKeuze" asp-route-genreId="@genre.GenreId" class="btn btn-link">@genre.GenreNaam</a>
+          
+        }
+    </div>
+    }

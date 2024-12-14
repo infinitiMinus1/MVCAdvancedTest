@@ -1,0 +1,46 @@
+﻿
+@model List<Film>
+
+<div class="alert alert-primary text-center" role="alert">
+    @TempData["message"]
+</div>
+
+
+@{
+    if (Model != null && Model.Any())
+    {
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td><strong>Titel</strong></td>
+            <td><strong>Prijs</strong></td>
+            <td><strong>Verwijderen</strong></td>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var film in Model)
+        {
+            <tr>
+                <td>
+                    @film.Titel
+                </td>
+                <td>
+                    @film.Prijs
+                </td>
+
+                <td>
+                    <a asp-action="VerwijderUitWinkelmand"
+                       asp-route-id="@film.FilmId">
+                        <img src="~/Images/delete.png" alt="plus" height="30" />
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-success" asp-action="FilmKeuze" asp-route-genreId="@Model.FirstOrDefault().GenreId">Verder winkelen</a><br /><br />
+<a class="btn btn-success" asp-action="Afrekenen">Afrekenen</a>
+}else{<h3>Geen films in de winkelmand</h3>}
+}

@@ -1,0 +1,9 @@
+﻿@model Film
+
+<h2>Verwijder film ui winkelmand</h2>
+
+<h5>@Model.Titel verwijderen uit jouw winkelmand?</h5>
+
+<a class="btn btn-success" asp-action="VerwijderUitWinkelmandDoorvoeren" asp-route-id="@Model.FilmId"><strong>ja</strong></a>
+<br /><br />
+<a class="btn btn-success" asp-action="Winkelmand"><strong>nee</strong></a>
