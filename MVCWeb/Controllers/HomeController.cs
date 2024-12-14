@@ -14,7 +14,7 @@ namespace MVCWeb.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly VerhuurService verhuurService;
-        public HomeController(ILogger<HomeController> logger , VerhuurService verhuurService)
+        public HomeController(ILogger<HomeController> logger, VerhuurService verhuurService)
         {
             _logger = logger;
             this.verhuurService = verhuurService;
@@ -26,8 +26,7 @@ namespace MVCWeb.Controllers
             {
                 TempData["Message"] = "Onbekende klant, probeer opnieuw.";
             }
-            if(!string.IsNullOrEmpty(HttpContext.Session.GetString("Voornaam")) &&
-                        !string.IsNullOrEmpty(HttpContext.Session.GetString("Naam")))
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Voornaam")))
             {
                 ViewBag.isAlIngelogd = true;
             }
@@ -65,7 +64,7 @@ namespace MVCWeb.Controllers
         {
             var genres = verhuurService.GetGenres();
             return View(genres);
-            
+
         }
 
 
@@ -76,7 +75,7 @@ namespace MVCWeb.Controllers
             return View(films);
         }
 
-       
+
         public IActionResult WinkelmandToevoegen(int id)
         {
             Film? film = verhuurService.GetMovie(id);
@@ -107,7 +106,7 @@ namespace MVCWeb.Controllers
                 return RedirectToAction("Index");
             }
         }
-      
+
         public IActionResult Winkelmand()
         {
             {
@@ -128,7 +127,7 @@ namespace MVCWeb.Controllers
 
         public IActionResult VerwijderUitWinkelmandDoorvoeren(int id)
         {
-           var film = verhuurService.GetMovie(id);
+            var film = verhuurService.GetMovie(id);
             var sessionVariabele = HttpContext.Session.GetString("GekozenFilms");
             List<Film>? gekozenFilms = JsonSerializer.Deserialize<List<Film>>(sessionVariabele);
             var filmToRemove = gekozenFilms.FirstOrDefault(f => f.FilmId == id);
@@ -169,20 +168,21 @@ namespace MVCWeb.Controllers
                 films.Clear();
                 var geserializeerdeLijst = JsonSerializer.Serialize(films);
                 HttpContext.Session.SetString("GekozenFilms", geserializeerdeLijst);
-               
+
                 transactionScope.Complete();
             }
 
             return RedirectToAction("AfrekenBevestiging");
 
         }
+
         public IActionResult AfrekenBevestiging()
         {
             return View();
         }
 
         public IActionResult Privacy()
-        {      
+        {
             return View();
         }
 
