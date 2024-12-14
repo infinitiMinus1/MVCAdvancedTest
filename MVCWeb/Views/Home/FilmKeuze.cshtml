@@ -1,9 +1,12 @@
 ﻿@model IEnumerable<Film>
 
 
-<div class="alert alert-primary text-center" role="alert">
-    @TempData["Message"]
-</div>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-primary text-center" role="alert">
+        @TempData["Message"]
+    </div>
+}
 <h2>@ViewBag.genre</h2>
 <br />
 <table class="table table-bordered">

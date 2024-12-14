@@ -56,7 +56,7 @@ namespace MVCWeb.Controllers
 
             }
             else
-                TempData["Message"] = "Onbekende klant, probeer opnieuw.";
+                TempData["Message"] = "Inlog poging ongeldig";
             return RedirectToAction("Index");
         }
 

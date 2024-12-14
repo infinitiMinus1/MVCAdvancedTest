@@ -1,9 +1,12 @@
 ﻿
 @model List<Film>
 
-<div class="alert alert-primary text-center" role="alert">
-    @TempData["message"]
-</div>
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-primary text-center" role="alert">
+        @TempData["message"]
+    </div>
+}
 
 
 @{

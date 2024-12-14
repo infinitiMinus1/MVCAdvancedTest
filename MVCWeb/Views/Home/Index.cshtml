@@ -17,8 +17,7 @@
     <br /><br>
     <input type="submit" value="Aanmelden" class="btn btn-primary btn-lg" />
 </form>
-<p>@TempData["Message"]</p>
-        </div>
+</div>
     }
     else
     {
@@ -28,5 +27,10 @@
         <div class ="text-center"><a asp-action="Genres" class="btn btn-primary">Kies Genre</a></div>
         
     }
-
+}
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-primary text-center" role="alert">
+        @TempData["Message"]
+    </div>
 }
