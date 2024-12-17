@@ -26,20 +26,18 @@ namespace MVCServices
             return verhuurRepository.GetAllGenres();
         }
 
-        public IEnumerable<Film> GetFilmByGenre(int genreId)
+        public IEnumerable<Film> GetFilmByGenre(int id)
         {
-            return verhuurRepository.GetFilmsByGenre(genreId);
+            return verhuurRepository.GetFilmsByGenre(id);
         }
 
         public void GetMovieFromStock(int id)
         {
-            Film? film = verhuurRepository.GetFilm(id);
             verhuurRepository.RemoveMovieFromStock(id);
         }
 
         public void AddMovieStock(int id)
         {
-            Film? film = verhuurRepository.GetFilm(id);
             verhuurRepository.AddMovieToStock(id);
         }
 

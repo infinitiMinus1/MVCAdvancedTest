@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Genre>
 
-    @if(Model != null)
+    @{
+        if(Model != null || Model.Any())
     {
     <div class="alert alert-primary text-center" role="alert">
         Klik op het gewenste Genre
@@ -9,8 +10,11 @@
     <div class="text-center">
         @foreach (var genre in Model)
         {
-        <a asp-action="FilmKeuze" asp-route-genreId="@genre.GenreId" class="btn btn-link">@genre.GenreNaam</a>
+        <a asp-action="FilmKeuze" asp-route-id="@genre.GenreId" class="btn btn-link">@genre.GenreNaam</a>
           
         }
     </div>
+    }
+    else {<p>Geen genres beschikbaar</p>}
+
     }

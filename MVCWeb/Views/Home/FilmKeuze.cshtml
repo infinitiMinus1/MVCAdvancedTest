@@ -7,41 +7,57 @@
         @TempData["Message"]
     </div>
 }
-<h2>@ViewBag.genre</h2>
-<br />
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <td><strong>Titel</strong></td>
-            <td><strong>Prijs</strong></td>
-            <td><strong>In voorraad</strong></td>
-            <td><strong>Huren</strong></td>
+@{
+    if (Model != null && Model.Any())
+    {
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var film in Model)
-        {
-            <tr>
-                <td>
-                   @film.Titel
-                </td>
-                <td>
-                    @film.Prijs €
-                </td>
-                <td>
-                    @film.InVoorraad
-                </td>
-                <td>@{
-                        if (film.InVoorraad > 0) {
-                            <a asp-action="WinkelmandToevoegen"
-                            asp-route-id="@film.FilmId">
-                        <img src="~/Images/plus.png" alt="plus" height="30" />
-                    </a>}}
-                </td>
+        <h2>@ViewBag.genre</h2>
+        <br />
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <td><strong>Titel</strong></td>
+                    <td><strong>Prijs</strong></td>
+                    <td><strong>In voorraad</strong></td>
+                    <td><strong>Huren</strong></td>
 
-            </tr>
-        }
-    </tbody>
-</table>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var film in Model)
+                {
+                    <tr>
+                        <td>
+                            @film.Titel
+                        </td>
+                        <td>
+                            @film.Prijs €
+                        </td>
+                        <td>
+                            @film.InVoorraad
+                        </td>
+                        <td>
+                            @{
+                                if (film.InVoorraad > 0)
+                                {
+                                    <form method="post" asp-action="WinkelmandToevoegen" asp-route-id="@film.FilmId">
+                                        <button type="submit">
+                                            <img src="~/Images/plus.png" alt="plus" height="30" />
+                                        </button>
+                                    </form>
+                                }
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-center">Geen films voor deze Genre</p>
+    }
+}
+
 <div class="text-center"><a asp-action="Genres" class="btn btn-primary">Terug naar genre-overzicht</a></div>

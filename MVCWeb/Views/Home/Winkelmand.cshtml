@@ -43,7 +43,7 @@
     </tbody>
 </table>
 
-<a class="btn btn-success" asp-action="FilmKeuze" asp-route-genreId="@Model.Last().GenreId">Verder winkelen</a><br /><br />
+<a class="btn btn-success" asp-action="FilmKeuze" asp-route-id="@Model.Last().GenreId">Verder winkelen</a><br /><br />
 <a class="btn btn-success" asp-action="Afrekenen">Afrekenen</a>
 }else{<h3 class="text-center">Geen films in de winkelmand</h3>
         <div class="text-center"><a asp-action="Genres" class="btn btn-primary">Terug naar genre-overzicht</a></div>

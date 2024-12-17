@@ -33,7 +33,7 @@ namespace MVCWeb.Controllers
             return View(new KlantViewModel());
         }
 
-
+      
         public IActionResult Aanmelden(KlantViewModel m)
         {
             if (this.ModelState.IsValid)
@@ -55,32 +55,46 @@ namespace MVCWeb.Controllers
 
             }
             else
-                TempData["Message"] = "Inlog poging ongeldig";
-            return RedirectToAction("Index");
+                TempData["Message"] = "Inlog poging ongeldig";         
+                return RedirectToAction("Index");
         }
 
         [HttpGet]
         public IActionResult Genres()
         {
             var genres = verhuurService.GetGenres();
-            return View(genres);
-
+            if (genres.Any())
+            {
+                return View(genres);
+            }
+            else
+            {
+                return View(new List<Genre>());
+            }
+            
         }
 
 
-        public IActionResult FilmKeuze(int genreId)
+        public IActionResult FilmKeuze(int id)
         {
-            IEnumerable<Film> films = verhuurService.GetFilmByGenre(genreId);
-            ViewBag.genre = verhuurService.GetGenreNaam(genreId);
-            return View(films);
+            IEnumerable<Film> films = verhuurService.GetFilmByGenre(id);
+            if (films.Any())
+            {
+                ViewBag.genre = verhuurService.GetGenreNaam(id);
+                return View(films);
+            }
+            else
+            {
+                return View(new List<Film>());
+            }
         }
 
-
+        [HttpPost]
         public IActionResult WinkelmandToevoegen(int id)
         {
             Film? film = verhuurService.GetMovie(id);
 
-            if (film != null) //film kan eigenlijk nooit null zijn hier, maar ik doe toch een null check voor zekerheid
+            if (film != null) 
             {
                 var sessionVariabeleFilms = HttpContext.Session.GetString("GekozenFilms");
                 List<Film>? gekozenFilms;
@@ -88,6 +102,7 @@ namespace MVCWeb.Controllers
                     gekozenFilms = new List<Film>();
                 else
                     gekozenFilms = JsonSerializer.Deserialize<List<Film>>(sessionVariabeleFilms);
+
                 if (gekozenFilms.All(f => f.FilmId != film.FilmId))
                 {
                     gekozenFilms?.Add(film);
@@ -103,7 +118,7 @@ namespace MVCWeb.Controllers
             }
             else
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Genres");
             }
         }
 
@@ -115,19 +130,26 @@ namespace MVCWeb.Controllers
                     ? new List<Film>()
                     : JsonSerializer.Deserialize<List<Film>>(sessionVariabeleBestellingen);
 
-                return View(gekozenFilms);
+                    return View(gekozenFilms);                              
             }
         }
 
         public IActionResult VerwijderUitWinkelmand(int id)
         {
             Film film = verhuurService.GetMovie(id);
+            
             return View(film);
         }
 
+        [HttpPost]
         public IActionResult VerwijderUitWinkelmandDoorvoeren(int id)
         {
             var film = verhuurService.GetMovie(id);
+            if (film == null) 
+            {
+                TempData["message"] = "Film niet gevonden";
+                return RedirectToAction("Winkelmand");
+            }
             var sessionVariabele = HttpContext.Session.GetString("GekozenFilms");
             List<Film>? gekozenFilms = JsonSerializer.Deserialize<List<Film>>(sessionVariabele);
             var filmToRemove = gekozenFilms.FirstOrDefault(f => f.FilmId == id);
@@ -147,9 +169,17 @@ namespace MVCWeb.Controllers
             List<Film>? gekozenFilms = string.IsNullOrEmpty(sessionVariabeleBestellingen)
                 ? new List<Film>()
                 : JsonSerializer.Deserialize<List<Film>>(sessionVariabeleBestellingen);
-            return View(gekozenFilms);
+            if (gekozenFilms.Any())
+            {
+                return View(gekozenFilms);
+            }
+            else
+            {
+                return View(new List<Film>());
+            }                    
         }
 
+        [HttpPost]
         public IActionResult AfrekenenDoorvoeren()
         {
             using (var transactionScope = new TransactionScope())
@@ -157,17 +187,24 @@ namespace MVCWeb.Controllers
 
                 var sessionVariabele = HttpContext.Session.GetString("GekozenFilms");
                 List<Film>? films = JsonSerializer.Deserialize<List<Film>>(sessionVariabele);
-                films.ForEach(film =>
+                if (films.Any())
                 {
-                    var klantGegevens = HttpContext.Session.GetString("klant");
-                    Klant klant = JsonSerializer.Deserialize<Klant>(klantGegevens);
-                    verhuurService.GetMovieFromStock(film.FilmId);
-                    verhuurService.AddVerhuur(new Verhuring { VerhuurDatum = DateTime.Now, FilmId = film.FilmId, KlantId = klant.KlantId });
-                });
-                //opruimen
-                films.Clear();
-                var geserializeerdeLijst = JsonSerializer.Serialize(films);
-                HttpContext.Session.SetString("GekozenFilms", geserializeerdeLijst);
+                    films.ForEach(film =>
+                    {
+                        var klantGegevens = HttpContext.Session.GetString("klant");
+                        Klant klant = JsonSerializer.Deserialize<Klant>(klantGegevens);
+                        verhuurService.GetMovieFromStock(film.FilmId);
+                        verhuurService.AddVerhuur(new Verhuring { VerhuurDatum = DateTime.Now, FilmId = film.FilmId, KlantId = klant.KlantId });
+                    });
+                    //opruimen
+                    films.Clear();
+                    var geserializeerdeLijst = JsonSerializer.Serialize(films);
+                    HttpContext.Session.SetString("GekozenFilms", geserializeerdeLijst);
+                }
+                else {
+                    TempData["Message"] = "Sessie verlopen";
+                    RedirectToAction("Index");
+                }
 
                 transactionScope.Complete();
             }

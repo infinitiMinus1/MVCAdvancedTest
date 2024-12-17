@@ -51,14 +51,14 @@ namespace MVCData.Repositories
             return context.Klanten.Where(klant => klant.Postcode == p && klant.VoorNaam == k ).FirstOrDefault();
         }
 
-        public IEnumerable<Film> GetFilmsByGenre(int genreId)
+        public IEnumerable<Film>? GetFilmsByGenre(int genreId)
         {
             return context.Films.Include(g => g.Genre).Where(film => film.GenreId == genreId).AsNoTracking();
         }
 
-        public string GetGenreNaam(int id)
+        public string? GetGenreNaam(int id)
         {
-            return context.Genres.Find(id).GenreNaam;
+            return context.Genres.Where(g => g.GenreId == id).Select(n => n.GenreNaam).FirstOrDefault();
         }
     }
 }
